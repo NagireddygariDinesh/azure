@@ -1,0 +1,9 @@
+{
+	"name": "adfsalesfilesreport",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "faca8440-67b9-4dde-8345-6625808d75bb",
+		"tenantId": "aa5f1c4e-9900-46d3-91a8-aab1054f9bbc"
+	}
+}
