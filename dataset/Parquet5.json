@@ -1,0 +1,59 @@
+{
+	"name": "Parquet5",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage10",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "dbo.EMPLOYEE.parquet",
+				"fileSystem": "input12"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "EMPNO",
+				"type": "INT32"
+			},
+			{
+				"name": "EMPNAME",
+				"type": "UTF8"
+			},
+			{
+				"name": "SAL",
+				"type": "DECIMAL",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "DEPTNO",
+				"type": "INT32"
+			},
+			{
+				"name": "LOCATION",
+				"type": "UTF8"
+			},
+			{
+				"name": "DOB",
+				"type": "DATE"
+			},
+			{
+				"name": "HIREDATE",
+				"type": "DATE"
+			},
+			{
+				"name": "GENDER",
+				"type": "UTF8"
+			},
+			{
+				"name": "EMAIL",
+				"type": "UTF8"
+			}
+		]
+	}
+}

@@ -1,0 +1,33 @@
+{
+	"name": "Parquet6",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage11",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "dbo.DEPARTMENT.parquet",
+				"fileSystem": "input12"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "deptno",
+				"type": "INT32"
+			},
+			{
+				"name": "DEPTNAME",
+				"type": "UTF8"
+			},
+			{
+				"name": "LOCATION",
+				"type": "UTF8"
+			}
+		]
+	}
+}
