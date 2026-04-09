@@ -1,0 +1,16 @@
+{
+	"name": "SqlServerTable8",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "selfhostsqlserver",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "ADF_Watermark_Table"
+		}
+	}
+}
