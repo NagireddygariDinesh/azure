@@ -59,13 +59,45 @@
 									"referenceName": "child pipeline",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"TableSchema": {
+										"value": "@pipeline().parameters.TableSchema",
+										"type": "Expression"
+									},
+									"TableName": {
+										"value": "@pipeline().parameters.TableName",
+										"type": "Expression"
+									},
+									"WatermarkColumn": {
+										"value": "@pipeline().parameters.watermarkcount",
+										"type": "Expression"
+									},
+									"LastLoadValue": {
+										"value": "@pipeline().parameters.LastLoadValue",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
 				}
 			}
 		],
+		"parameters": {
+			"TableSchema": {
+				"type": "string"
+			},
+			"TableName": {
+				"type": "string"
+			},
+			"watermarkcount": {
+				"type": "string"
+			},
+			"LastLoadValue": {
+				"type": "int"
+			}
+		},
 		"folder": {
 			"name": "project1"
 		},

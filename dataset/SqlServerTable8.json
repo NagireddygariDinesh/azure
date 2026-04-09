@@ -7,7 +7,25 @@
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
-		"schema": [],
+		"schema": [
+			{
+				"name": "TableSchema",
+				"type": "varchar"
+			},
+			{
+				"name": "TableName",
+				"type": "varchar"
+			},
+			{
+				"name": "WatermarkColumn",
+				"type": "varchar"
+			},
+			{
+				"name": "LastLoadValue",
+				"type": "bigint",
+				"precision": 19
+			}
+		],
 		"typeProperties": {
 			"schema": "dbo",
 			"table": "ADF_Watermark_Table"
