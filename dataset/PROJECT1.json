@@ -1,0 +1,22 @@
+{
+	"name": "PROJECT1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "selfhostsqlserver",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@pipeline().parameters.TABLESCHEMA",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@pipeline().parameters.TABLENAME",
+				"type": "Expression"
+			}
+		}
+	}
+}
