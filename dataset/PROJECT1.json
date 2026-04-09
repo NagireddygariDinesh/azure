@@ -7,10 +7,12 @@
 		},
 		"parameters": {
 			"tableschema": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@{pipeline().parameters.TableSchema}"
 			},
 			"tablename": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@{pipeline().parameters.TableName}"
 			}
 		},
 		"annotations": [],
