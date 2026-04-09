@@ -6,10 +6,10 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"@{pipeline().parameters.TableSchema}": {
+			"tableschema": {
 				"type": "string"
 			},
-			"@{pipeline().parameters.TableName}": {
+			"tablename": {
 				"type": "string"
 			}
 		},
