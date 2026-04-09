@@ -9,24 +9,34 @@
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
+					"retryIntervalInSeconds": 30
 				},
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT MAX(@{pipeline().parameters.WatermarkColumn}) AS MaxValue\r\nFROM @{pipeline().parameters.TableSchema}.@{pipeline().parameters.TableName}\r\n",
-						"queryTimeout": "02:00:00",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT MAX([', pipeline().parameters.WatermarkColumn, ']) AS MaxValue FROM ', pipeline().parameters.TableSchema, '.', pipeline().parameters.TableName)",
+							"type": "Expression"
+						},
 						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "PROJECT1",
 						"type": "DatasetReference",
 						"parameters": {
-							"tableschema": "@{pipeline().parameters.TableSchema}",
-							"tablename": "@{pipeline().parameters.TableName}"
+							"tableschema": {
+								"value": "@pipeline().parameters.TableSchema",
+								"type": "Expression"
+							},
+							"tablename": {
+								"value": "@pipeline().parameters.TableName",
+								"type": "Expression"
+							},
+							"watermarkcolumn": {
+								"value": "@pipeline().parameters.WatermarkColumn",
+								"type": "Expression"
+							}
 						}
 					}
 				}
@@ -45,7 +55,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@or(equals(pipeline().parameters.LastLoadValue, null), greater(int(activity('LKUP_MAX_VALUE').output.firstRow.MaxValue), int(pipeline().parameters.LastLoadValue)))",
+						"value": "@or(equals(pipeline().parameters.LastLoadValue, null), greater(activity('Lookup1').output.firstRow.MaxValue, pipeline().parameters.LastLoadValue))",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -56,22 +66,36 @@
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
+								"retryIntervalInSeconds": 30
 							},
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
 									"sqlReaderQuery": {
-										"value": "@concat(\n    'SELECT * FROM ',\n    pipeline().parameters.TableSchema, '.', pipeline().parameters.TableName,\n    if(\n        equals(pipeline().parameters.LastLoadValue, null),\n        '', \n        concat(\n            ' WHERE ', pipeline().parameters.WatermarkColumn,\n            ' > ''', pipeline().parameters.LastLoadValue, ''''\n        )\n    )\n)",
+										"value": "@concat('SELECT * FROM ', pipeline().parameters.TableSchema, '.', pipeline().parameters.TableName, if(equals(pipeline().parameters.LastLoadValue, null), '', concat(' WHERE [', pipeline().parameters.WatermarkColumn, '] > ''', pipeline().parameters.LastLoadValue, '''')))",
 										"type": "Expression"
 									},
-									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
@@ -79,21 +103,68 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"tableschema": {
-											"value": "@{pipeline().parameters.TableSchema}",
+											"value": "@pipeline().parameters.TableSchema",
 											"type": "Expression"
 										},
 										"tablename": {
 											"value": "@pipeline().parameters.TableName",
 											"type": "Expression"
+										},
+										"watermarkcolumn": {
+											"value": "@pipeline().parameters.WatermarkColumn",
+											"type": "Expression"
 										}
 									}
 								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Parquet1",
+									"type": "DatasetReference"
+								}
 							]
+						},
+						{
+							"name": "Execute Pipeline1",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Copy data1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "pipeline4",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true
+							}
 						}
 					]
 				}
 			}
 		],
+		"parameters": {
+			"TableSchema": {
+				"type": "string"
+			},
+			"TableName": {
+				"type": "string"
+			},
+			"WatermarkColumn": {
+				"type": "string"
+			},
+			"LastLoadValue": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "project1"
 		},
