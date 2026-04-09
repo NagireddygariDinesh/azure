@@ -5,18 +5,20 @@
 			"referenceName": "selfhostsqlserver",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"@{pipeline().parameters.TableSchema}": {
+				"type": "string"
+			},
+			"@{pipeline().parameters.TableName}": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": {
-				"value": "@pipeline().parameters.TABLESCHEMa",
-				"type": "Expression"
-			},
-			"table": {
-				"value": "@pipeline().parameters.TABLENAME",
-				"type": "Expression"
-			}
+			"schema": "dbo",
+			"table": "ADF_Watermark_Table"
 		}
 	}
 }
