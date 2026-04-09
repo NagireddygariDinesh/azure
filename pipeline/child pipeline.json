@@ -25,14 +25,6 @@
 						"referenceName": "PROJECT1",
 						"type": "DatasetReference",
 						"parameters": {
-							"tableschema": {
-								"value": "@pipeline().parameters.TableSchema",
-								"type": "Expression"
-							},
-							"tablename": {
-								"value": "@pipeline().parameters.TableName",
-								"type": "Expression"
-							},
 							"watermarkcolumn": {
 								"value": "@pipeline().parameters.WatermarkColumn",
 								"type": "Expression"
@@ -55,7 +47,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@or(equals(pipeline().parameters.LastLoadValue, null), greater(activity('Lookup1').output.firstRow.MaxValue, pipeline().parameters.LastLoadValue))",
+						"value": "@greater(int(coalesce(activity('Lookup1').output.firstRow.MaxValue, 0)), coalesce(pipeline().parameters.LastLoadValue, 0))",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -73,7 +65,7 @@
 								"source": {
 									"type": "SqlServerSource",
 									"sqlReaderQuery": {
-										"value": "@concat('SELECT * FROM ', pipeline().parameters.TableSchema, '.', pipeline().parameters.TableName, if(equals(pipeline().parameters.LastLoadValue, null), '', concat(' WHERE [', pipeline().parameters.WatermarkColumn, '] > ''', pipeline().parameters.LastLoadValue, '''')))",
+										"value": "@concat('SELECT * FROM ', pipeline().parameters.TableSchema, '.', pipeline().parameters.TableName, if(equals(pipeline().parameters.LastLoadValue, 0), '', concat(' WHERE [', pipeline().parameters.WatermarkColumn, '] > ', string(pipeline().parameters.LastLoadValue))))",
 										"type": "Expression"
 									},
 									"partitionOption": "None"
@@ -102,14 +94,6 @@
 									"referenceName": "PROJECT1",
 									"type": "DatasetReference",
 									"parameters": {
-										"tableschema": {
-											"value": "@pipeline().parameters.TableSchema",
-											"type": "Expression"
-										},
-										"tablename": {
-											"value": "@pipeline().parameters.TableName",
-											"type": "Expression"
-										},
 										"watermarkcolumn": {
 											"value": "@pipeline().parameters.WatermarkColumn",
 											"type": "Expression"
@@ -144,7 +128,25 @@
 									"referenceName": "pipeline4",
 									"type": "PipelineReference"
 								},
-								"waitOnCompletion": true
+								"waitOnCompletion": true,
+								"parameters": {
+									"TableSchema": {
+										"value": "@pipeline().parameters.TableSchema",
+										"type": "Expression"
+									},
+									"TableName": {
+										"value": "@pipeline().parameters.TableName",
+										"type": "Expression"
+									},
+									"WatermarkColumn": {
+										"value": "@pipeline().parameters.WatermarkColumn",
+										"type": "Expression"
+									},
+									"LastLoadValue": {
+										"value": "@pipeline().parameters.LastLoadValue",
+										"type": "Expression"
+									}
+								}
 							}
 						}
 					]
@@ -153,16 +155,20 @@
 		],
 		"parameters": {
 			"TableSchema": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@item().TableSchema"
 			},
 			"TableName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@item().TableName"
 			},
 			"WatermarkColumn": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@item().WatermarkColumn"
 			},
 			"LastLoadValue": {
-				"type": "string"
+				"type": "int",
+				"defaultValue": "@item().LastLoadValue"
 			}
 		},
 		"folder": {

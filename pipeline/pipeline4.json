@@ -28,6 +28,10 @@
 						"WatermarkColumn": {
 							"value": "",
 							"type": "String"
+						},
+						"undefined": {
+							"value": "",
+							"type": "Int16"
 						}
 					}
 				},
