@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": {
-				"value": "@pipeline().parameters.TABLESCHEMA",
+				"value": "@pipeline().parameters.TABLESCHEMa",
 				"type": "Expression"
 			},
 			"table": {
