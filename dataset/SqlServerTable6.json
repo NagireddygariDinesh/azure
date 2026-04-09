@@ -1,0 +1,57 @@
+{
+	"name": "SqlServerTable6",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "EMPNO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EMPNAME",
+				"type": "varchar"
+			},
+			{
+				"name": "SAL",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			},
+			{
+				"name": "DEPTNO",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LOCATION",
+				"type": "varchar"
+			},
+			{
+				"name": "DOB",
+				"type": "date"
+			},
+			{
+				"name": "HIREDATE",
+				"type": "date"
+			},
+			{
+				"name": "GENDER",
+				"type": "char"
+			},
+			{
+				"name": "EMAIL",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "EMPLOYEE"
+		}
+	}
+}

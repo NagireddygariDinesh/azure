@@ -1,0 +1,114 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SqlServerTable6",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "SqlServerTable7",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Parquet7",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "join1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          EMPNO as integer,",
+				"          EMPNAME as string,",
+				"          SAL as decimal(19,4),",
+				"          DEPTNO as integer,",
+				"          LOCATION as string,",
+				"          DOB as date,",
+				"          HIREDATE as date,",
+				"          GENDER as string,",
+				"          EMAIL as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          deptno as integer,",
+				"          DEPTNAME as string,",
+				"          LOCATION as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1 select(mapColumn(",
+				"          EMPNO,",
+				"          EMPNAME,",
+				"          SAL,",
+				"          DEPTNO,",
+				"          LOCATION,",
+				"          DOB,",
+				"          HIREDATE,",
+				"          GENDER,",
+				"          EMAIL",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source2 select(mapColumn(",
+				"          deptno,",
+				"          DEPTNAME,",
+				"          LOCATION",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select1, select2 join(select1@DEPTNO == select2@deptno,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          EMPNO as integer,",
+				"          EMPNAME as string,",
+				"          SAL as decimal(19,4),",
+				"          DEPTNO as integer,",
+				"          LOCATION as string,",
+				"          DOB as date,",
+				"          HIREDATE as date,",
+				"          GENDER as string,",
+				"          EMAIL as string",
+				"     ),",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

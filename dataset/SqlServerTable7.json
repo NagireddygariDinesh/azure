@@ -1,0 +1,30 @@
+{
+	"name": "SqlServerTable7",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "deptno",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DEPTNAME",
+				"type": "varchar"
+			},
+			{
+				"name": "LOCATION",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DEPARTMENT"
+		}
+	}
+}
