@@ -27,6 +27,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage11'"
 		},
+		"AzureDataLakeStorage12_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage12'"
+		},
+		"AzureDataLakeStorage13_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage13'"
+		},
 		"AzureDataLakeStorage2_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage2'"
@@ -67,6 +75,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SqlServer2'"
 		},
+		"selfhostsqlserver_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'selfhostsqlserver'"
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsgensalesreportfile.dfs.core.windows.net/"
@@ -76,6 +88,14 @@
 			"defaultValue": "https://adlsgensalesreportfile.dfs.core.windows.net/"
 		},
 		"AzureDataLakeStorage11_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsgensalesreportfile.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage12_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsgensalesreportfile.dfs.core.windows.net/"
+		},
+		"AzureDataLakeStorage13_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://adlsgensalesreportfile.dfs.core.windows.net/"
 		},
@@ -151,6 +171,18 @@
 			"type": "string",
 			"defaultValue": "DINESH\\dines"
 		},
+		"selfhostsqlserver_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "dinesh\\"
+		},
+		"selfhostsqlserver_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "project1"
+		},
+		"selfhostsqlserver_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "DINESH\\dines"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -193,6 +225,12 @@
 					"AzureDataLakeStorage11_accountKey": {
 						"value": "[parameters('AzureDataLakeStorage11_accountKey')]"
 					},
+					"AzureDataLakeStorage12_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage12_accountKey')]"
+					},
+					"AzureDataLakeStorage13_accountKey": {
+						"value": "[parameters('AzureDataLakeStorage13_accountKey')]"
+					},
 					"AzureDataLakeStorage2_accountKey": {
 						"value": "[parameters('AzureDataLakeStorage2_accountKey')]"
 					},
@@ -225,6 +263,12 @@
 					},
 					"AzureDataLakeStorage11_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage11_properties_typeProperties_url')]"
+					},
+					"AzureDataLakeStorage12_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage12_properties_typeProperties_url')]"
+					},
+					"AzureDataLakeStorage13_properties_typeProperties_url": {
+						"value": "[parameters('AzureDataLakeStorage13_properties_typeProperties_url')]"
 					},
 					"AzureDataLakeStorage2_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage2_properties_typeProperties_url')]"
@@ -277,6 +321,9 @@
 					"SqlServer2_password": {
 						"value": "[parameters('SqlServer2_password')]"
 					},
+					"selfhostsqlserver_password": {
+						"value": "[parameters('selfhostsqlserver_password')]"
+					},
 					"AzureSqlDatabase1_properties_typeProperties_server": {
 						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_server')]"
 					},
@@ -303,11 +350,40 @@
 					},
 					"SqlServer2_properties_typeProperties_userName": {
 						"value": "[parameters('SqlServer2_properties_typeProperties_userName')]"
+					},
+					"selfhostsqlserver_properties_typeProperties_server": {
+						"value": "[parameters('selfhostsqlserver_properties_typeProperties_server')]"
+					},
+					"selfhostsqlserver_properties_typeProperties_database": {
+						"value": "[parameters('selfhostsqlserver_properties_typeProperties_database')]"
+					},
+					"selfhostsqlserver_properties_typeProperties_userName": {
+						"value": "[parameters('selfhostsqlserver_properties_typeProperties_userName')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'adfsalesfilesreport_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "adfsalesfilesreport_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adfsalesfilesreport_ArmTemplate_1')]"
 			]
 		}
 	]
