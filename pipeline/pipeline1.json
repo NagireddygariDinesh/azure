@@ -1,0 +1,170 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"description": "Master orchestration pipeline for metadata-driven incremental loads",
+		"activities": [
+			{
+				"name": "LKUP_SQLTABLE_WATERMARK_DW",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 1,
+					"retryIntervalInSeconds": 30
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT TableSchema, TableName, WatermarkColumn, LastLoadValue FROM dbo.ADF_Watermark_Table;",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "project2",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableSchema": {
+								"value": "@pipeline().parameters.TableSchema",
+								"type": "Expression"
+							},
+							"TableName": {
+								"value": "@pipeline().parameters.TableName",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "FE_FOREACH_TABLES",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LKUP_SQLTABLE_WATERMARK_DW",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LKUP_SQLTABLE_WATERMARK_DW').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "EXEC_CHILD_INCREMENTAL_PIPELINE",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Copy data1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "pipeline2",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"TableSchema": {
+										"value": "@item().TableSchema",
+										"type": "Expression"
+									},
+									"TableName": {
+										"value": "@item().TableName",
+										"type": "Expression"
+									},
+									"WatermarkColumn": {
+										"value": "@item().WatermarkColumn",
+										"type": "Expression"
+									},
+									"LastLoadValue": "@item().LastLoadValue"
+								}
+							}
+						},
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SqlServerTable10",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Parquet8",
+									"type": "DatasetReference"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"TableSchema": {
+				"type": "String",
+				"defaultValue": "@item().TableSchema"
+			},
+			"TableName": {
+				"type": "String",
+				"defaultValue": "@item().TableName"
+			}
+		},
+		"folder": {
+			"name": "ADF_INCREMENTAL_LOAD"
+		},
+		"annotations": [
+			"Parent pipeline",
+			"Metadata driven",
+			"Incremental load orchestration"
+		]
+	}
+}
