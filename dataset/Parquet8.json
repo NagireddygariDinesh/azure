@@ -1,0 +1,40 @@
+{
+	"name": "Parquet8",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage13",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "output12"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "SupplierKey",
+				"type": "INT32"
+			},
+			{
+				"name": "SupplierID",
+				"type": "INT32"
+			},
+			{
+				"name": "SupplierName",
+				"type": "UTF8"
+			},
+			{
+				"name": "City",
+				"type": "UTF8"
+			},
+			{
+				"name": "Country",
+				"type": "UTF8"
+			}
+		]
+	}
+}
