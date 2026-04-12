@@ -16,7 +16,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT TableSchema, TableName, WatermarkColumn, LastLoadValue FROM dbo.ADF_Watermark_Table;",
+						"sqlReaderQuery": "SELECT TableSchema, TableName, WatermarkColumn, LastLoadValue\r\nFROM dbo.ADF_Watermark_Table",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -90,7 +90,10 @@
 										"value": "@item().WatermarkColumn",
 										"type": "Expression"
 									},
-									"LastLoadValue": "@item().LastLoadValue"
+									"LastLoadValue": {
+										"value": "@item().LastLoadValue",
+										"type": "Expression"
+									}
 								}
 							}
 						},

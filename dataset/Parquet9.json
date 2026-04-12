@@ -1,0 +1,37 @@
+{
+	"name": "Parquet9",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage14",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "dbo.ADF_Watermark_Table.parquet",
+				"fileSystem": "output12"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "TableSchema",
+				"type": "UTF8"
+			},
+			{
+				"name": "TableName",
+				"type": "UTF8"
+			},
+			{
+				"name": "WatermarkColumn",
+				"type": "UTF8"
+			},
+			{
+				"name": "LastLoadValue",
+				"type": "INT64"
+			}
+		]
+	}
+}
