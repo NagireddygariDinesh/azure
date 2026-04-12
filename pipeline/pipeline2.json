@@ -178,19 +178,19 @@
 		"parameters": {
 			"TableSchema": {
 				"type": "string",
-				"defaultValue": "dbo"
+				"defaultValue": "@item().TableSchema"
 			},
 			"TableName": {
 				"type": "string",
-				"defaultValue": "FactSales"
+				"defaultValue": "@item().TableName"
 			},
 			"WatermarkColumn": {
 				"type": "string",
-				"defaultValue": "DataKey"
+				"defaultValue": "@item().WatermarkColumn"
 			},
 			"LastLoadValue": {
 				"type": "string",
-				"defaultValue": "20260401"
+				"defaultValue": "@item().LastLoadValue"
 			}
 		},
 		"annotations": []
